@@ -1,6 +1,6 @@
 package com.example.shubhamgupta.moviedb.Network;
 
-import com.example.shubhamgupta.moviedb.InCinemas.InCinemasMovies;
+import com.example.shubhamgupta.moviedb.Upcoming.UpComingMovies;
 
 import java.util.ArrayList;
 
@@ -9,14 +9,14 @@ import java.util.ArrayList;
  */
 
 public class UpcomingMoviesJson {
-    ArrayList<InCinemasMovies> results;
+    ArrayList<UpComingMovies> results;
     dates mdates;
 
-    public ArrayList<InCinemasMovies> getResults() {
+    public ArrayList<UpComingMovies> getResults() {
         return results;
     }
 
-    public void setResults(ArrayList<InCinemasMovies> results) {
+    public void setResults(ArrayList<UpComingMovies> results) {
         this.results = results;
     }
 

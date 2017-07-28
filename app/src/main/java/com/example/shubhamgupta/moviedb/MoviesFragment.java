@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,10 @@ import com.example.shubhamgupta.moviedb.InCinemas.InCinemasRecyclerAdapter;
 import com.example.shubhamgupta.moviedb.Network.ApiInterface;
 import com.example.shubhamgupta.moviedb.Network.InCinemasMoviesJson;
 import com.example.shubhamgupta.moviedb.Network.PopularMoviesJson;
+import com.example.shubhamgupta.moviedb.Network.TopRatedMoviesJson;
+import com.example.shubhamgupta.moviedb.Network.UpcomingMoviesJson;
+import com.example.shubhamgupta.moviedb.TopRated.TopRatedMovies;
+import com.example.shubhamgupta.moviedb.TopRated.TopRatedRecyclerAdapter;
 import com.example.shubhamgupta.moviedb.Upcoming.UpComingMovies;
 import com.example.shubhamgupta.moviedb.Upcoming.UpComingRecyclerAdapter;
 
@@ -44,6 +49,11 @@ public class MoviesFragment extends Fragment{
     UpComingRecyclerAdapter mUpComingRecyclerAdapter;
     ArrayList<UpComingMovies> mUpComingMoviesList;
     RecyclerView mUpComingRecyclerView;
+
+
+    TopRatedRecyclerAdapter mTopRatedRecyclerAdapter;
+    ArrayList<TopRatedMovies> mTopRatedMoviesList;
+    RecyclerView mTopRatedRecyclerView;
 
 
     Retrofit mRetrofit;
@@ -79,11 +89,78 @@ public class MoviesFragment extends Fragment{
 
 
         //UpComingMovies
+       mUpComingRecyclerView=mView.findViewById(R.id.upComing_movies_recycler_view);
+        mUpComingMoviesList=new ArrayList<>();
+        mUpComingRecyclerAdapter= new UpComingRecyclerAdapter(getContext(),mUpComingMoviesList);
+        mUpComingRecyclerView.setAdapter(mUpComingRecyclerAdapter);
+        mUpComingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
+        fetchUpComingMovies();
+
+
+
+        //TopRatedMovies
+        mTopRatedRecyclerView=mView.findViewById(R.id.top_rated_movies_recycler_view);
+        mTopRatedMoviesList=new ArrayList<>();
+        mTopRatedRecyclerAdapter= new TopRatedRecyclerAdapter(getContext(),mTopRatedMoviesList);
+        mTopRatedRecyclerView.setAdapter(mTopRatedRecyclerAdapter);
+        mTopRatedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
+        fetchTopRatedMovies();
 
 
 
 
         return mView;
+
+    }
+
+    private void fetchTopRatedMovies() {
+        ApiInterface mApiInterface=mRetrofit.create(ApiInterface.class);
+        Call<TopRatedMoviesJson> mCallResponse=mApiInterface.getTopRatedMovies("53f2c2d690d584b74a488657b393cd17");
+        mCallResponse.enqueue(new Callback<TopRatedMoviesJson>() {
+            @Override
+            public void onResponse(Call<TopRatedMoviesJson> call, Response<TopRatedMoviesJson> response) {
+                TopRatedMoviesJson mCallResponse=response.body();
+                ArrayList<TopRatedMovies> mTopRatedMovies=mCallResponse.getResults();
+                onDownloadCompleteTopRated(mTopRatedMovies);
+            }
+
+            @Override
+            public void onFailure(Call<TopRatedMoviesJson> call, Throwable t) {
+
+            }
+        });
+
+
+
+    }
+
+    private void onDownloadCompleteTopRated(ArrayList<TopRatedMovies> mTopRatedMovies) {
+        mTopRatedMoviesList.addAll(mTopRatedMovies);
+        mTopRatedRecyclerAdapter.notifyDataSetChanged();
+    }
+
+    private void fetchUpComingMovies() {
+        ApiInterface mApiInterface=mRetrofit.create(ApiInterface.class);
+        Call<UpcomingMoviesJson> mCallResponse=mApiInterface.getUpComingMovies("53f2c2d690d584b74a488657b393cd17");
+        mCallResponse.enqueue(new Callback<UpcomingMoviesJson>() {
+            @Override
+            public void onResponse(Call<UpcomingMoviesJson> call, Response<UpcomingMoviesJson> response) {
+                UpcomingMoviesJson mCallResponse=response.body();
+                ArrayList<UpComingMovies> mUpComingMovies=mCallResponse.getResults();
+                onDownloadCompleteUpComing(mUpComingMovies);
+            }
+
+            @Override
+            public void onFailure(Call<UpcomingMoviesJson> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    private void onDownloadCompleteUpComing(ArrayList<UpComingMovies> mUpComingMovies) {
+        mUpComingMoviesList.addAll(mUpComingMovies);
+        mUpComingRecyclerAdapter.notifyDataSetChanged();
 
     }
 
@@ -94,6 +171,7 @@ public class MoviesFragment extends Fragment{
         mCallResponse.enqueue(new Callback<InCinemasMoviesJson>() {
             @Override
             public void onResponse(Call<InCinemasMoviesJson> call, Response<InCinemasMoviesJson> response) {
+                Log.i("String","jbhghgvdsghghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhgggggggggggggg");
                 InCinemasMoviesJson mCallResponse=response.body();
                 ArrayList<InCinemasMovies> mInCinemasMovies=mCallResponse.getResults();
                 onDownloadCompleteInCinemas(mInCinemasMovies);

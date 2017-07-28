@@ -2,6 +2,7 @@ package com.example.shubhamgupta.moviedb.Upcoming;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ public class UpComingRecyclerAdapter extends RecyclerView.Adapter<UpComingRecycl
     @Override
     public UpComingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View mView= LayoutInflater.from(mContext).inflate(R.layout.popular_movies_view,parent,false);
-        return new UpComingRecyclerAdapter.UpComingViewHolder(mView);
+        return new UpComingViewHolder(mView);
     }
 
     @Override

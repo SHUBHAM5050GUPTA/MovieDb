@@ -15,4 +15,10 @@ public interface ApiInterface {
 
     @GET("movie/now_playing")
     public Call<InCinemasMoviesJson> getInCinemasMovies(@Query("api_key") String apiKey);
+
+    @GET("movie/upcoming")
+    public Call<UpcomingMoviesJson> getUpComingMovies(@Query("api_key") String apiKey);
+
+    @GET("movie/top_rated")
+    public Call<TopRatedMoviesJson> getTopRatedMovies(@Query("api_key") String apiKey);
 }
