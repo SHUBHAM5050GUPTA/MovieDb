@@ -1,5 +1,7 @@
 package com.example.shubhamgupta.moviedb;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+
+import retrofit2.http.HTTP;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,6 +89,13 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"imdb@example.com"}); // recipients
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+            emailIntent.putExtra(Intent.EXTRA_TEXT, "Email message text");
+            emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://path/to/email/attachment"));
+            startActivity(emailIntent);
             return true;
         }
 

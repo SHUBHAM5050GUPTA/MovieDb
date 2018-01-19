@@ -1,7 +1,11 @@
 package com.example.shubhamgupta.moviedb.Network;
 
+import com.example.shubhamgupta.moviedb.Cast.MovieCast;
+import com.example.shubhamgupta.moviedb.PopularMovies;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -21,4 +25,12 @@ public interface ApiInterface {
 
     @GET("movie/top_rated")
     public Call<TopRatedMoviesJson> getTopRatedMovies(@Query("api_key") String apiKey);
+
+    @GET("movie/{movie_id}/credits")
+    public  Call<MovieCastJson> getMovieCast(@Path("movie_id") String movieId, @Query("api_key") String apiKey);
+
+    @GET("movie/{movie_id}/similar")
+    public Call<PopularMoviesJson> getSimilarMovies(@Path("movie_id")String movieId, @Query("api_key") String apiKey);
+
+
 }

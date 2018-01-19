@@ -1,5 +1,6 @@
 package com.example.shubhamgupta.moviedb;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -70,7 +71,30 @@ public class MoviesFragment extends Fragment{
         //Most Popular Movies
         mRecyclerView=mView.findViewById(R.id.popular_movies_recycler_view);
         mPopularMoviesList=new ArrayList<>();
-        mRecyclerAdapter=new RecyclerAdapter(getContext(),mPopularMoviesList);
+        mRecyclerAdapter=new RecyclerAdapter(getContext(), mPopularMoviesList, new RecyclerAdapter.OnMovieClickListner() {
+            @Override
+            public void movieClickListner(View view, int position) {
+                Intent intent=new Intent(getContext(),MovieClickActivity.class);
+
+                intent.putExtra(MovieIntents.MOVIE_POSTER,mPopularMoviesList.get(position).getPopularPoster());
+                intent.putExtra(MovieIntents.POATER_BACK,mPopularMoviesList.get(position).getPosterBack());
+                intent.putExtra(MovieIntents.MOVIE_TITLE,mPopularMoviesList.get(position).getTitle());
+
+                Log.i("title",mPopularMoviesList.get(position).getTitle());
+
+
+                intent.putExtra(MovieIntents.MOVIE_POPULARITY,mPopularMoviesList.get(position).getPopularity());
+                intent.putExtra(MovieIntents.MOVIE_ID,mPopularMoviesList.get(position).getId());
+                intent.putExtra(MovieIntents.MOVIE_OVERVIEW,mPopularMoviesList.get(position).getOverview());
+                intent.putStringArrayListExtra(MovieIntents.MOVIE_GENRE_IDS,mPopularMoviesList.get(position).getGenreIds());
+                intent.putExtra(MovieIntents.MOVIE_VOTE_COUNT,mPopularMoviesList.get(position).getVoteCount());
+                intent.putExtra(MovieIntents.MOVIE_VOTE_AVERAGE,mPopularMoviesList.get(position).getVoteAverage());
+                intent.putExtra(MovieIntents.MOVIE_ADULT,mPopularMoviesList.get(position).getAdult());
+                intent.putExtra(MovieIntents.MOVIE_RELEASE_DATE,mPopularMoviesList.get(position).getReleaseDate());
+
+                startActivity(intent);
+            }
+        });
         mRecyclerView.setAdapter(mRecyclerAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
        // mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.HORIZONTAL));
@@ -115,7 +139,7 @@ public class MoviesFragment extends Fragment{
 
     private void fetchTopRatedMovies() {
         ApiInterface mApiInterface=mRetrofit.create(ApiInterface.class);
-        Call<TopRatedMoviesJson> mCallResponse=mApiInterface.getTopRatedMovies("53f2c2d690d584b74a488657b393cd17");
+        Call<TopRatedMoviesJson> mCallResponse=mApiInterface.getTopRatedMovies(MovieIntents.API_KEY);
         mCallResponse.enqueue(new Callback<TopRatedMoviesJson>() {
             @Override
             public void onResponse(Call<TopRatedMoviesJson> call, Response<TopRatedMoviesJson> response) {
@@ -141,7 +165,7 @@ public class MoviesFragment extends Fragment{
 
     private void fetchUpComingMovies() {
         ApiInterface mApiInterface=mRetrofit.create(ApiInterface.class);
-        Call<UpcomingMoviesJson> mCallResponse=mApiInterface.getUpComingMovies("53f2c2d690d584b74a488657b393cd17");
+        Call<UpcomingMoviesJson> mCallResponse=mApiInterface.getUpComingMovies(MovieIntents.API_KEY);
         mCallResponse.enqueue(new Callback<UpcomingMoviesJson>() {
             @Override
             public void onResponse(Call<UpcomingMoviesJson> call, Response<UpcomingMoviesJson> response) {
@@ -167,7 +191,7 @@ public class MoviesFragment extends Fragment{
     private void fetchInCinemasMovies() {
 
         ApiInterface mApiInterface=mRetrofit.create(ApiInterface.class);
-        Call<InCinemasMoviesJson> mCallResponse=mApiInterface.getInCinemasMovies("53f2c2d690d584b74a488657b393cd17");
+        Call<InCinemasMoviesJson> mCallResponse=mApiInterface.getInCinemasMovies(MovieIntents.API_KEY);
         mCallResponse.enqueue(new Callback<InCinemasMoviesJson>() {
             @Override
             public void onResponse(Call<InCinemasMoviesJson> call, Response<InCinemasMoviesJson> response) {
@@ -191,12 +215,12 @@ public class MoviesFragment extends Fragment{
 
     private void fetchPopularMovies() {
         mRetrofit=new Retrofit.Builder()
-                .baseUrl("http://api.themoviedb.org/3/")
+                .baseUrl(MovieIntents.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         ApiInterface mApiInterface=mRetrofit.create(ApiInterface.class);
-        Call<PopularMoviesJson> mCallResponse=mApiInterface.getPopularMovies("53f2c2d690d584b74a488657b393cd17");
+        Call<PopularMoviesJson> mCallResponse=mApiInterface.getPopularMovies(MovieIntents.API_KEY);
         mCallResponse.enqueue(new Callback<PopularMoviesJson>() {
             @Override
             public void onResponse(Call<PopularMoviesJson> call, Response<PopularMoviesJson> response) {
@@ -217,4 +241,6 @@ public class MoviesFragment extends Fragment{
         mPopularMoviesList.addAll(mPopularMovies);
         mRecyclerAdapter.notifyDataSetChanged();
     }
+
+
 }
